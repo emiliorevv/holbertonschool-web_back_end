@@ -1,0 +1,2 @@
+// Insertar un documento en la colección school
+db.school.insertOne({ name: "Holberton school" });
