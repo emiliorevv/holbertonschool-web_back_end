@@ -1,32 +1,35 @@
 #!/usr/bin/env python3
 """
-Script que proporciona estadísticas sobre los logs de Nginx almacenados en MongoDB.
+Módulo para el análisis estadístico de registros Nginx en MongoDB.
 """
 from pymongo import MongoClient
 
 
-def log_stats():
+def run_log_stats():
     """
-    Muestra estadísticas sobre la colección nginx en la base de datos logs.
+    Extrae y muestra estadísticas clave de la colección logs.nginx.
     """
-    client = MongoClient('mongodb://127.0.0.1:27017')
-    collection = client.logs.nginx
+    # Conexión al servidor local de MongoDB
+    db_client = MongoClient('mongodb://127.0.0.1:27017')
+    nginx_col = db_client.logs.nginx
 
-    # Total de logs
-    total_logs = collection.count_documents({})
-    print(f"{total_logs} logs")
+    # Obtención del total general de documentos
+    total_records = nginx_col.count_documents({})
+    print(f"{total_records} logs")
 
-    # Estadísticas por métodos
+    # Resumen de conteos por método HTTP
     print("Methods:")
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    for method in methods:
-        count = collection.count_documents({"method": method})
-        print(f"\tmethod {method}: {count}")
+    http_methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
-    # Conteo específico para GET /status
-    status_check = collection.count_documents({"method": "GET", "path": "/status"})
-    print(f"{status_check} status check")
+    for verb in http_methods:
+        method_count = nginx_col.count_documents({"method": verb})
+        print(f"\tmethod {verb}: {method_count}")
+
+    # Verificación específica del endpoint de estado
+    status_query = {"method": "GET", "path": "/status"}
+    checks = nginx_col.count_documents(status_query)
+    print(f"{checks} status check")
 
 
 if __name__ == "__main__":
-    log_stats()
+    run_log_stats()
