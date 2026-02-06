@@ -1,0 +1,5 @@
+// Añadir el atributo address a todos los documentos con el nombre especificado
+db.school.updateMany(
+    { name: "Holberton school" },
+    { $set: { address: "972 Mission street" } }
+);
