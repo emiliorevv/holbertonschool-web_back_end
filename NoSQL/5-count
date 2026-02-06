@@ -1,0 +1,2 @@
+// Mostrar la cantidad de documentos en la colección school
+print(db.school.countDocuments());
