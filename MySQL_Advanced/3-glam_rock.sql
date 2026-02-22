@@ -1,10 +1,5 @@
--- Select the band name and lifespan, ordering by the lifespan in descending order
-SELECT
-    band_name,
-    (CASE
-        WHEN split IS NULL THEN 2024
-        ELSE split
-     END - formed) AS lifespan
+-- Script that lists all bands with Glam rock as their main style, ranked by their longevity up to the year 2024
+SELECT band_name, (COALESCE(split, 2024) - formed) AS lifespan
 FROM metal_bands
-WHERE style = 'Glam rock'
+WHERE style LIKE '%Glam rock%'
 ORDER BY lifespan DESC;
